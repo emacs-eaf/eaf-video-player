@@ -7,3 +7,13 @@ This repository provides the EAF Video Player application for the [Emacs Applica
 (add-to-list 'load-path "~/.emacs.d/site-lisp/eaf-video-player/")
 (require 'eaf-video-player)
 ```
+
+### The keybinding of EAF Video Player.
+
+| Key   | Event   |
+| :---- | :------ |
+| `SPC` | toggle_play |
+| `x` | close_buffer |
+| `h` | play_backward |
+| `l` | play_forward |
+
