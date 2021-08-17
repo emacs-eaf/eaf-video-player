@@ -110,3 +110,13 @@ class VideoPlayerWidget(QWidget):
     def play_backward(self):
         video_position = self.media_player.position()
         self.media_player.setPosition(max(video_position - self.video_seek_durcation, 0))
+
+    @interactive
+    def increase_volume(self):
+        print(self.media_player.volume())
+        self.media_player.setVolume(self.media_player.volume() + 10)
+
+    @interactive
+    def decrease_volume(self):
+        print(self.media_player.volume())
+        self.media_player.setVolume(self.media_player.volume() - 10)

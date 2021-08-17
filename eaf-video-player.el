@@ -88,7 +88,11 @@
   '(("SPC" . "toggle_play")
     ("x" . "close_buffer")
     ("h" . "play_backward")
-    ("l" . "play_forward"))
+    ("l" . "play_forward")
+    ("j" . "decrease_volume")
+    ("k" . "increase_volume")
+    ("f" . "toggle_fullscreen")
+    )
   "The keybinding of EAF Video Player."
   :type 'cons)
 
