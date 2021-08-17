@@ -172,13 +172,15 @@ class VideoPlayer(QWidget):
 
     @interactive
     def increase_volume(self):
-        print(self.media_player.volume())
         self.media_player.setVolume(self.media_player.volume() + 10)
 
     @interactive
     def decrease_volume(self):
-        print(self.media_player.volume())
         self.media_player.setVolume(self.media_player.volume() - 10)
+
+    @interactive
+    def restart(self):
+        self.media_player.setPosition(0)
 
 class ControlPanel(QtWidgets.QGraphicsItem):
     def __init__(self, parent=None):

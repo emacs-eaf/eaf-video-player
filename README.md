@@ -19,4 +19,5 @@ This repository provides the EAF Video Player application for the [Emacs Applica
 | `j` | decrease_volume |
 | `k` | increase_volume |
 | `f` | toggle_fullscreen |
+| `r` | restart |
 
