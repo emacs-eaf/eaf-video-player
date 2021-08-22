@@ -26,7 +26,7 @@ from PyQt5.QtMultimedia import QMediaContent, QMediaPlayer
 from PyQt5.QtMultimediaWidgets import QGraphicsVideoItem
 from PyQt5.QtWidgets import QWidget, QGraphicsScene, QGraphicsView, QVBoxLayout, QHBoxLayout, QPushButton
 from core.buffer import Buffer
-from core.utils import interactive, get_emacs_var
+from core.utils import interactive
 
 class AppBuffer(Buffer):
     def __init__(self, buffer_id, url, arguments):
@@ -34,7 +34,7 @@ class AppBuffer(Buffer):
 
         self.background_color = QColor(0, 0, 0)
 
-        self.add_widget(VideoPlayer())
+        self.add_widget(VideoPlayer(self.theme_background_color, self.theme_foreground_color))
         self.buffer_widget.play(url)
 
         self.build_all_methods(self.buffer_widget)
@@ -71,8 +71,8 @@ class AppBuffer(Buffer):
 
 class VideoPlayer(QWidget):
 
-    def __init__(self, parent=None):
-        super(VideoPlayer, self).__init__(parent)
+    def __init__(self, theme_background_color, theme_foreground_color):
+        super(VideoPlayer, self).__init__()
 
         self.scene = QGraphicsScene(self)
         self.scene.setBackgroundBrush(QBrush(QColor(0, 0, 0, 255)))
@@ -97,7 +97,7 @@ class VideoPlayer(QWidget):
 
         self.control_panel = ControlPanel()
 
-        self.progress_bar = ProgressBar()
+        self.progress_bar = ProgressBar(theme_background_color, theme_foreground_color)
         self.progress_bar.progress_changed.connect(self.update_video_progress)
         self.progress_bar_layout.addWidget(self.progress_bar)
 
@@ -204,10 +204,10 @@ class ProgressBar(QWidget):
 
     progress_changed = QtCore.pyqtSignal(float)
 
-    def __init__(self, parent=None):
-        super(QWidget, self).__init__(parent)
-        self.foreground_color = QColor(get_emacs_var("eaf-emacs-theme-foreground-color"))
-        self.background_color = QColor(get_emacs_var("eaf-emacs-theme-background-color"))
+    def __init__(self, theme_background_color, theme_foreground_color):
+        super(QWidget, self).__init__()
+        self.foreground_color = QColor(theme_foreground_color)
+        self.background_color = QColor(theme_background_color)
         self.position = 0
         self.duration = 0
         self.is_press = False
