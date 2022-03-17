@@ -82,6 +82,8 @@ class VideoPlayer(QWidget):
         self.graphics_view.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.graphics_view.setFrameStyle(0)
         self.graphics_view.setStyleSheet("QGraphicsView {background: transparent; border: 3px; outline: none;}")
+        
+        self.is_button_press = False
 
         self.video_item = QGraphicsVideoItem()
 
@@ -93,7 +95,11 @@ class VideoPlayer(QWidget):
         self.control_panel_widget = QWidget()
         self.control_panel_widget.setStyleSheet("background-color: transparent;")
         self.progress_bar_layout = QHBoxLayout(self.control_panel_widget)
-        self.progress_bar_layout.setContentsMargins(self.panel_padding_x, self.panel_padding_y, self.panel_padding_x, self.panel_padding_x)
+        self.progress_bar_layout.setContentsMargins(
+            int(self.panel_padding_x), 
+            int(self.panel_padding_y), 
+            int(self.panel_padding_x), 
+            int(self.panel_padding_x))
 
         self.control_panel = ControlPanel()
 
@@ -144,6 +150,11 @@ class VideoPlayer(QWidget):
         self.media_player.play()
 
     def eventFilter(self, obj, event):
+        if event.type() in [QEvent.MouseButtonPress]:
+            self.is_button_press = True
+        elif event.type() in [QEvent.MouseButtonRelease]:
+            self.is_button_press = False
+            
         if event.type() == QEvent.MouseMove:
             if event.y() > self.height() - self.progress_bar_height:
                 self.show_control_panel()
@@ -237,9 +248,9 @@ class ProgressBar(QWidget):
 
         painter.setPen(self.background_color)
         painter.setBrush(self.background_color)
-        painter.drawRect(0, render_y, self.width(), self.render_height)
+        painter.drawRect(0, int(render_y), int(self.width()), int(self.render_height))
 
         if self.duration > 0:
             painter.setPen(self.foreground_color)
             painter.setBrush(self.foreground_color)
-            painter.drawRect(0, render_y, self.width() * self.position / self.duration, self.render_height)
+            painter.drawRect(0, int(render_y), int(self.width() * self.position / self.duration), int(self.render_height))
