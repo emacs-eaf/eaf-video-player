@@ -87,9 +87,9 @@ class VideoPlayer(QWidget):
 
         self.video_item = QGraphicsVideoItem()
 
-        self.panel_height = 120
-        self.progress_bar_height = 120
-        self.panel_padding_x = 60
+        self.panel_height = 60
+        self.progress_bar_height = 60
+        self.panel_padding_x = 0
         self.panel_padding_y = (self.panel_height - self.progress_bar_height) / 2
 
         self.control_panel_widget = QWidget()
@@ -202,7 +202,7 @@ class ControlPanel(QtWidgets.QGraphicsItem):
         self.height = 0
         self.width = 0
         self.background_color = QColor(0, 0, 0, 255)
-        self.setOpacity(0.5)
+        self.setOpacity(0.9)
 
     def update_size(self, width, height):
         self.width = width
