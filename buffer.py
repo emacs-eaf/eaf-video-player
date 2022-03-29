@@ -19,12 +19,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt5 import QtWidgets, QtGui, QtCore
-from PyQt5.QtCore import QSizeF, Qt, QUrl, QRectF, QEvent, QTimer
-from PyQt5.QtGui import QBrush, QColor, QPainter, QPen, QPainterPath
-from PyQt5.QtMultimedia import QMediaContent, QMediaPlayer
-from PyQt5.QtMultimediaWidgets import QGraphicsVideoItem
-from PyQt5.QtWidgets import QWidget, QGraphicsScene, QGraphicsView, QVBoxLayout, QHBoxLayout, QPushButton
+from PyQt6 import QtWidgets, QtGui, QtCore
+from PyQt6.QtCore import QSizeF, Qt, QUrl, QRectF, QEvent, QTimer
+from PyQt6.QtGui import QBrush, QColor, QPainter, QPen, QPainterPath
+from PyQt6.QtMultimedia import QMediaPlayer, QAudioOutput
+from PyQt6.QtMultimediaWidgets import QGraphicsVideoItem
+from PyQt6.QtWidgets import QWidget, QGraphicsScene, QGraphicsView, QVBoxLayout, QHBoxLayout, QPushButton
 from core.buffer import Buffer
 from core.utils import interactive
 
@@ -78,8 +78,8 @@ class VideoPlayer(QWidget):
         self.scene.setBackgroundBrush(QBrush(QColor(0, 0, 0, 255)))
 
         self.graphics_view = QGraphicsView(self.scene)
-        self.graphics_view.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        self.graphics_view.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.graphics_view.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.graphics_view.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.graphics_view.setFrameStyle(0)
         self.graphics_view.setStyleSheet("QGraphicsView {background: transparent; border: 3px; outline: none;}")
         
@@ -115,9 +115,12 @@ class VideoPlayer(QWidget):
         self.scene.addItem(self.control_panel)
         self.control_panel_proxy_widget = self.scene.addWidget(self.control_panel_widget)
 
-        self.media_player = QMediaPlayer(None, QMediaPlayer.VideoSurface)
+        self.media_player = QMediaPlayer()
+        self.audio_output = QAudioOutput()
+        
         self.media_player.positionChanged.connect(self.progress_change)
         self.media_player.setVideoOutput(self.video_item)
+        self.media_player.setAudioOutput(self.audio_output)
 
         self.video_need_replay = False
         self.video_seek_durcation = 10000 # in milliseconds
@@ -127,7 +130,7 @@ class VideoPlayer(QWidget):
         self.graphics_view.viewport().installEventFilter(self)
 
     def update_video_progress(self, percent):
-        self.media_player.setPosition(self.media_player.duration() * percent)
+        self.media_player.setPosition(int(self.media_player.duration() * percent))
 
     def progress_change(self, position):
         self.progress_bar.update_progress(self.media_player.duration(), position)
@@ -146,17 +149,17 @@ class VideoPlayer(QWidget):
         QWidget.resizeEvent(self, event)
 
     def play(self, url):
-        self.media_player.setMedia(QMediaContent(QUrl.fromLocalFile(url)))
+        self.media_player.setSource(QUrl.fromLocalFile(url))
         self.media_player.play()
 
     def eventFilter(self, obj, event):
-        if event.type() in [QEvent.MouseButtonPress]:
+        if event.type() in [QEvent.Type.MouseButtonPress]:
             self.is_button_press = True
-        elif event.type() in [QEvent.MouseButtonRelease]:
+        elif event.type() in [QEvent.Type.MouseButtonRelease]:
             self.is_button_press = False
             
-        if event.type() == QEvent.MouseMove:
-            if event.y() > self.height() - self.progress_bar_height:
+        if event.type() == QEvent.Type.MouseMove:
+            if event.position().y() > self.height() - self.progress_bar_height:
                 self.show_control_panel()
             else:
                 self.hide_control_panel()
@@ -210,6 +213,9 @@ class ControlPanel(QtWidgets.QGraphicsItem):
         painter.setPen(self.background_color)
         painter.setBrush(self.background_color)
         painter.drawRect(0, 0, self.width, self.height)
+        
+    def boundingRect(self):
+        return QRectF(0, 0, self.width, self.height)
 
 class ProgressBar(QWidget):
 
@@ -232,14 +238,14 @@ class ProgressBar(QWidget):
 
     def mousePressEvent(self, event):
         self.is_press = True
-        self.progress_changed.emit(event.x() * 1.0 / self.width())
+        self.progress_changed.emit(event.position().x() * 1.0 / self.width())
 
     def mouseReleaseEvent(self, event):
         self.is_press = False
 
     def mouseMoveEvent(self, event):
         if self.is_press:
-            self.progress_changed.emit(event.x() * 1.0 / self.width())
+            self.progress_changed.emit(event.position.x() * 1.0 / self.width())
 
     def paintEvent(self, event):
         painter = QPainter(self)
