@@ -245,7 +245,7 @@ class ProgressBar(QWidget):
 
     def mouseMoveEvent(self, event):
         if self.is_press:
-            self.progress_changed.emit(event.position.x() * 1.0 / self.width())
+            self.progress_changed.emit(event.position().x() * 1.0 / self.width())
 
     def paintEvent(self, event):
         painter = QPainter(self)
