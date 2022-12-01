@@ -26,7 +26,7 @@ from PyQt6.QtMultimedia import QMediaPlayer, QAudioOutput
 from PyQt6.QtMultimediaWidgets import QGraphicsVideoItem
 from PyQt6.QtWidgets import QWidget, QGraphicsScene, QGraphicsView, QVBoxLayout, QHBoxLayout, QPushButton
 from core.buffer import Buffer
-from core.utils import interactive
+from core.utils import interactive, message_to_emacs
 
 class AppBuffer(Buffer):
     def __init__(self, buffer_id, url, arguments):
@@ -178,19 +178,23 @@ class VideoPlayer(QWidget):
     def play_forward(self):
         video_position = self.media_player.position()
         self.media_player.setPosition(video_position + self.video_seek_durcation)
+        message_to_emacs("Forward to: {}%".format(self.media_player.position() / self.media_player.duration() * 100))
 
     @interactive
     def play_backward(self):
         video_position = self.media_player.position()
         self.media_player.setPosition(max(video_position - self.video_seek_durcation, 0))
-
+        message_to_emacs("Forward to: {}%".format(self.media_player.position() / self.media_player.duration() * 100))
+        
     @interactive
     def increase_volume(self):
-        self.media_player.setVolume(self.media_player.volume() + 10)
+        self.audio_output.setVolume(self.audio_output.volume() + 0.1)
+        message_to_emacs("Increase volume to: {}%".format(self.audio_output.volume() * 100))
 
     @interactive
     def decrease_volume(self):
-        self.media_player.setVolume(self.media_player.volume() - 10)
+        self.audio_output.setVolume(self.audio_output.volume() - 0.1)
+        message_to_emacs("Decrease volume to: {}%".format(self.audio_output.volume() * 100))
 
     @interactive
     def restart(self):
