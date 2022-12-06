@@ -41,7 +41,7 @@ class AppBuffer(Buffer):
 
     def all_views_hide(self):
         # Pause video before all views hdie, otherwise will got error "Internal data stream error".
-        if self.buffer_widget.media_player.state() == QMediaPlayer.PlayingState:
+        if self.buffer_widget.media_player.playbackState() == QMediaPlayer.PlaybackState.PlayingState:
             self.buffer_widget.media_player.pause()
             self.buffer_widget.video_need_replay = True
 
@@ -57,7 +57,7 @@ class AppBuffer(Buffer):
         self.buffer_widget.media_player.setPosition(position)
 
     def toggle_play(self):
-        if self.buffer_widget.media_player.state() == QMediaPlayer.PlayingState:
+        if self.buffer_widget.media_player.playbackState() == QMediaPlayer.PlaybackState.PlayingState:
             self.buffer_widget.media_player.pause()
             self.buffer_widget.video_need_replay = False
         else:
