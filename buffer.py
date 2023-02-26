@@ -19,12 +19,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt6 import QtWidgets, QtGui, QtCore
-from PyQt6.QtCore import QSizeF, Qt, QUrl, QRectF, QEvent, QTimer
-from PyQt6.QtGui import QBrush, QColor, QPainter, QPen, QPainterPath
+from PyQt6 import QtWidgets, QtCore
+from PyQt6.QtCore import QSizeF, Qt, QUrl, QRectF, QEvent
+from PyQt6.QtGui import QBrush, QColor, QPainter
 from PyQt6.QtMultimedia import QMediaPlayer, QAudioOutput
 from PyQt6.QtMultimediaWidgets import QGraphicsVideoItem
-from PyQt6.QtWidgets import QWidget, QGraphicsScene, QGraphicsView, QVBoxLayout, QHBoxLayout, QPushButton
+from PyQt6.QtWidgets import QWidget, QGraphicsScene, QGraphicsView, QVBoxLayout, QHBoxLayout
 from core.buffer import Buffer
 from core.utils import interactive, message_to_emacs
 
