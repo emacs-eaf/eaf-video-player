@@ -19,14 +19,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt6 import QtWidgets, QtCore
-from PyQt6.QtCore import QSizeF, Qt, QUrl, QRectF, QEvent
-from PyQt6.QtGui import QBrush, QColor, QPainter
-from PyQt6.QtMultimedia import QMediaPlayer, QAudioOutput
-from PyQt6.QtMultimediaWidgets import QGraphicsVideoItem
-from PyQt6.QtWidgets import QWidget, QGraphicsScene, QGraphicsView, QVBoxLayout, QHBoxLayout
 from core.buffer import Buffer
 from core.utils import interactive, message_to_emacs
+from PyQt6 import QtCore, QtWidgets
+from PyQt6.QtCore import QEvent, QRectF, QSizeF, Qt, QUrl
+from PyQt6.QtGui import QBrush, QColor, QPainter
+from PyQt6.QtMultimedia import QAudioOutput, QMediaPlayer
+from PyQt6.QtMultimediaWidgets import QGraphicsVideoItem
+from PyQt6.QtWidgets import QGraphicsScene, QGraphicsView, QHBoxLayout, QVBoxLayout, QWidget
+
 
 class AppBuffer(Buffer):
     def __init__(self, buffer_id, url, arguments):
@@ -82,7 +83,7 @@ class VideoPlayer(QWidget):
         self.graphics_view.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.graphics_view.setFrameStyle(0)
         self.graphics_view.setStyleSheet("QGraphicsView {background: transparent; border: 3px; outline: none;}")
-        
+
         self.is_button_press = False
 
         self.video_item = QGraphicsVideoItem()
@@ -96,9 +97,9 @@ class VideoPlayer(QWidget):
         self.control_panel_widget.setStyleSheet("background-color: transparent;")
         self.progress_bar_layout = QHBoxLayout(self.control_panel_widget)
         self.progress_bar_layout.setContentsMargins(
-            int(self.panel_padding_x), 
-            int(self.panel_padding_y), 
-            int(self.panel_padding_x), 
+            int(self.panel_padding_x),
+            int(self.panel_padding_y),
+            int(self.panel_padding_x),
             int(self.panel_padding_x))
 
         self.control_panel = ControlPanel()
@@ -117,7 +118,7 @@ class VideoPlayer(QWidget):
 
         self.media_player = QMediaPlayer()
         self.audio_output = QAudioOutput()
-        
+
         self.media_player.positionChanged.connect(self.progress_change)
         self.media_player.setVideoOutput(self.video_item)
         self.media_player.setAudioOutput(self.audio_output)
@@ -157,7 +158,7 @@ class VideoPlayer(QWidget):
             self.is_button_press = True
         elif event.type() in [QEvent.Type.MouseButtonRelease]:
             self.is_button_press = False
-            
+
         if event.type() == QEvent.Type.MouseMove:
             if event.position().y() > self.height() - self.progress_bar_height:
                 self.show_control_panel()
@@ -185,7 +186,7 @@ class VideoPlayer(QWidget):
         video_position = self.media_player.position()
         self.media_player.setPosition(max(video_position - self.video_seek_durcation, 0))
         message_to_emacs("Forward to: {}%".format(self.media_player.position() / self.media_player.duration() * 100))
-        
+
     @interactive
     def increase_volume(self):
         self.audio_output.setVolume(self.audio_output.volume() + 0.1)
@@ -217,7 +218,7 @@ class ControlPanel(QtWidgets.QGraphicsItem):
         painter.setPen(self.background_color)
         painter.setBrush(self.background_color)
         painter.drawRect(0, 0, self.width, self.height)
-        
+
     def boundingRect(self):
         return QRectF(0, 0, self.width, self.height)
 
